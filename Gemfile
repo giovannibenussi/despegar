@@ -1,3 +1,7 @@
 source 'https://rubygems.org'
+gem 'activesupport'
 gem 'colorize'
+gem 'http'
 gem 'ruby-progressbar'
+gem 'tty'
+gem 'tty-table'
