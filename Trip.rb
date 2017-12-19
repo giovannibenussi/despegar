@@ -1,5 +1,6 @@
 require 'colorize'
 require 'open-uri'
+require 'open_uri_redirections'
 
 class ColoredNumber
 
@@ -58,7 +59,8 @@ class Trip
             response = File.read('lib/answer_example.json')
             # sleep(0.5)
         else
-            response = open(self.getURL).read
+          puts getURL
+            response = open(self.getURL, allow_redirections: :safe).read
         end
         begin
           @response = JSON.parse(response)
