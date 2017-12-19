@@ -4,6 +4,9 @@ class Package
 
   require_relative 'test_package.rb'
 
+  def test
+  end
+
   def initialize(options, debug: false)
     @options = options
     extend TestPackage if debug
