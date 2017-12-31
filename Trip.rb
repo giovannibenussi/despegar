@@ -60,7 +60,7 @@ class Trip
         if @debug
           response = File.read('lib/test/responses/flights.json')
         else
-          response = open(self.getURL, allow_redirections: :safe).read
+          response = open(getURL, allow_redirections: :safe).read
         end
         begin
           @response = JSON.parse(response, object_class: OpenStruct)
