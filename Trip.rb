@@ -1,6 +1,8 @@
 require 'colorize'
 require 'open-uri'
 require 'open_uri_redirections'
+require 'active_support'
+require 'active_support/core_ext/object/to_query'
 
 class ColoredNumber
 
@@ -46,24 +48,49 @@ class Trip
     end
 
     def getURL
-        puts "You must provide a base_url" and exit if @base_url.nil?
-        "#{@base_url}#{@origin_city}/#{@destination_city}/#{@start_date.year}-#{@start_date.month}-#{@start_date.day}/#{@end_date.year}-#{@end_date.month}-#{@end_date.day}/1/0/0/TOTALFARE/ASCENDING/NA/NA/NA/NA/NA"
+      "https://www.despegar.cl/shop/flights-busquets/api/v1/web/search?" + params.to_query
+    end
+
+    def params
+      start_date_str = @start_date.strftime('%F')
+      end_date_str = @end_date.strftime('%F')
+      {
+        adults: 1,
+        children: 0,
+        infants: 0,
+        offset: 0,
+        limit: 10,
+        site: 'CL',
+        channel: 'SITE',
+        from: @origin_city,
+        to: @destination_city,
+        departureDate: start_date_str,
+        returnDate: end_date_str,
+        groupBy: 'default',
+        orderBy: 'total_price_ascending',
+        currency: 'CLP',
+        viewMode: 'CLUSTER',
+        language: 'es_CL',
+        streaming: true,
+        airlineSummary: false,
+        user: '6a8418ad-1da5-41df-8418-ad1da5d1df2a',
+        _: 1514678611138
+      }
     end
 
     def getLowestPrice
-        @response["result"]["data"]["items"].first["emissionPrice"]["total"]["fare"]["amount"]
+      highlights = @response.map { |r| r.arg.highlights }.compact
+      highlights.map { |h| h.cheapestItinerary.price.amount }.min
     end
 
     def getData
         if @debug
-            response = File.read('lib/answer_example.json')
-            # sleep(0.5)
+          response = File.read('lib/test/responses/flights.json')
         else
-          puts getURL
-            response = open(self.getURL, allow_redirections: :safe).read
+          response = open(getURL, allow_redirections: :safe).read
         end
         begin
-          @response = JSON.parse(response)
+          @response = JSON.parse(response, object_class: OpenStruct)
         rescue JSON::ParserError => e
           if  e.message =~ /^[0-9]+: unexpected token at ''$/
             puts "Error, maybe you need to complete a captcha in #{getURL}"

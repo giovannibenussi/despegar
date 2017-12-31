@@ -77,7 +77,6 @@ while to <= end_date
         current_to = to.addDays(margin)
         threads.push << Thread.new(start_date, current_to){ | from, to |
             trip = Trip.new(options[:origin_city], options[:destination_city])
-            trip.base_url = 'http://www.despegar.cl/shop/flights/data/search/roundtrip/'
             trip.debug = true if options[:debug]
             trip.setRanges(options['price_ranges'])
             trip.start_date = from
