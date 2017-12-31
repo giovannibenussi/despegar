@@ -1,1 +1,1 @@
-2017-12-31 13:24:55 - 8991d8a :rotating_light: Use getUrl insteadl of self.getUrl
+2017-12-31 14:12:24 - bec9eba Use hash to modify options instead of string interpolation

@@ -1,6 +1,8 @@
 require 'colorize'
 require 'open-uri'
 require 'open_uri_redirections'
+require 'active_support'
+require 'active_support/core_ext/object/to_query'
 
 class ColoredNumber
 
@@ -46,9 +48,34 @@ class Trip
     end
 
     def getURL
+      "https://www.despegar.cl/shop/flights-busquets/api/v1/web/search?" + params.to_query
+    end
+
+    def params
       start_date_str = @start_date.strftime('%F')
       end_date_str = @end_date.strftime('%F')
-      "https://www.despegar.cl/shop/flights-busquets/api/v1/web/search?adults=1&children=0&infants=0&offset=0&limit=10&site=CL&channel=SITE&from=#{@origin_city}&to=#{@destination_city}&departureDate=#{start_date_str}&returnDate=#{end_date_str}&groupBy=default&orderBy=total_price_ascending&currency=CLP&viewMode=CLUSTER&language=es_CL&streaming=true&airlineSummary=false&user=6a8418ad-1da5-41df-8418-ad1da5d1df2a&_=1514678611138"
+      {
+        adults: 1,
+        children: 0,
+        infants: 0,
+        offset: 0,
+        limit: 10,
+        site: 'CL',
+        channel: 'SITE',
+        from: @origin_city,
+        to: @destination_city,
+        departureDate: start_date_str,
+        returnDate: end_date_str,
+        groupBy: 'default',
+        orderBy: 'total_price_ascending',
+        currency: 'CLP',
+        viewMode: 'CLUSTER',
+        language: 'es_CL',
+        streaming: true,
+        airlineSummary: false,
+        user: '6a8418ad-1da5-41df-8418-ad1da5d1df2a',
+        _: 1514678611138
+      }
     end
 
     def getLowestPrice
