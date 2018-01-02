@@ -104,8 +104,6 @@ if not options[:hide_partial_output]
     results = results.sort_by { | to_str, price | to_str }
     results.each &displayResults
 end
-puts all_results.to_s
-puts all_results.to_s
 
 prices = all_results.map { | date_date, values | values.map { | from_date, price | price } }.flatten
 

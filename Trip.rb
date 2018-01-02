@@ -4,8 +4,7 @@ require 'open_uri_redirections'
 require 'active_support'
 require 'active_support/core_ext/object/to_query'
 
-class ColoredNumber
-
+class Trip
     def initialize(number, price_ranges)
         @number = number
         @price_ranges = price_ranges
