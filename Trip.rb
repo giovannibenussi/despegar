@@ -3,6 +3,7 @@ require 'open-uri'
 require 'open_uri_redirections'
 require 'active_support'
 require 'active_support/core_ext/object/to_query'
+require_relative 'despegar'
 require_relative 'despegar_response'
 
 class Trip
@@ -84,20 +85,13 @@ class Trip
     end
 
     def getData
-        if @debug
-          response = File.read('lib/test/responses/flights.json')
-          response = DespegarResponse.new(OpenStruct.new(body: response))
-        else
-          response = Despegar.get(getURL)
-        end
-        begin
-          @response = response.content(as: OpenStruct)
-        rescue JSON::ParserError => e
-          if  e.message =~ /^[0-9]+: unexpected token at ''$/
-            puts "Error, maybe you need to complete a captcha in #{getURL}"
-            exit
-          end
-        end
+      if @debug
+        response = File.read('lib/test/responses/flights.json')
+        response = DespegarResponse.new(OpenStruct.new(body: response))
+      else
+        response = Despegar.get(getURL)
+      end
+      @response = response.content(as: OpenStruct)
     end
 
     def setRanges(price_ranges)
